@@ -86,6 +86,15 @@ $routes->match(['post', 'get'], '/submitReview', 'MainController::submitReview')
 $routes->match(['post', 'get'], '/saveService', 'MainController::saveService');
 $routes->get('/getservice', 'MainController::getservice');
 
+$routes->get('/api/dashboard/sales', 'MainController::getSalesData');
+$routes->get('/api/dashboard/event-bookings', 'MainController::getEventBookingsData');
+$routes->get('/api/dashboard/reviews', 'MainController::getReviewsData');
+$routes->get('/api/dashboard/services', 'MainController::getServicesData');
+$routes->get('/api/dashboard/users', 'MainController::getUsersData');
+
+$routes->get('/api/dashboard/daily-sales', 'MainController::getDailySalesData');
+$routes->get('/api/dashboard/weekly-sales', 'MainController::getWeeklySalesData');
+
 
 
 

@@ -987,7 +987,87 @@ public function chatbot()
     }
     
     
+    // Dashboard
+public function getSalesData()
+{
+    $salesModel = new SalesModel();
+    // $data = $salesModel->findAll(); -> ginalaw ko
+    $data = $salesModel->select("SUM(total) as total_sales, MONTH(created_at) as date")
+        ->groupBy("MONTH(created_at)")
+        ->get();
+
+    $ByMonth = $data->getResult();
+
+    // Sorting by month
+    usort($ByMonth, function ($a, $b) {
+        return $a->date - $b->date;
+    });
+
+    return $this->respond($ByMonth);  // Returns JSON data
+}       
+
+    public function getEventBookingsData()
+    {
+        $eventBookingModel = new EventBookingModel();
+        $data = $eventBookingModel->findAll();
+        return $this->respond($data);
+    }
+
+    public function getReviewsData()
+    {
+        $reviewModel = new ReviewModel();
+        $data = $reviewModel->findAll();
+        return $this->respond($data);
+    }
+
+    public function getServicesData()
+    {
+        $servicesModel = new ServicesModel();
+        $data = $servicesModel->findAll();
+        return $this->respond($data);
+    }
+
+    public function getUsersData()
+    {
+        $userModel = new UserModel();
+        $data = $userModel->findAll();
+        return $this->respond($data);
+    }
     
+//DAILY
+public function getDailySalesData()
+{
+    $salesModel = new SalesModel();
+    $data = $salesModel->select("SUM(total) as total_sales, DAY(created_at) as day, MONTH(created_at) as month, YEAR(created_at) as year")
+        ->groupBy("YEAR(created_at), MONTH(created_at), DAY(created_at)")
+        ->get();
+
+    $ByDay = $data->getResultArray();
+
+    usort($ByDay, function ($a, $b) {
+        return strtotime("{$a['year']}-{$a['month']}-{$a['day']}") - strtotime("{$b['year']}-{$b['month']}-{$b['day']}");
+    });
+
+    return $this->respond($ByDay);
+}
+
+//WEEKLY   
+    public function getWeeklySalesData()
+{
+    $salesModel = new SalesModel();
+    $data = $salesModel->select("SUM(total) as total_sales, WEEK(created_at) as week, YEAR(created_at) as year")
+        ->groupBy("YEAR(created_at), WEEK(created_at)")
+        ->get();
+
+    $ByWeek = $data->getResultArray();
+
+    usort($ByWeek, function ($a, $b) {
+        return ($a['year'] - $b['year']) ?: ($a['week'] - $b['week']);
+    });
+
+    return $this->respond($ByWeek);
+}
+
     
 }
 
